@@ -23,7 +23,6 @@ async function fetchSatelliteData(userLocation: {
 }): Promise<Satellite[]> {
   let [lat, lng] = [userLocation.lat, userLocation.lng];
   const response = await fetch(`/api/satellites?lat=${lat}&lng=${lng}`);
-  console.log(response);
   if (!response.ok) {
     console.error("Server responded with status code", response.status);
     return [];

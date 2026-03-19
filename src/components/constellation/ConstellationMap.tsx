@@ -121,7 +121,7 @@ const DEFAULT_CENTER: [number, number] = [-98.5795, 39.8283];
 const DEFAULT_ZOOM = 3.6;
 const MIN_ZOOM = 1.05;
 const MAX_ZOOM = 18.5;
-const USER_FOCUS_ZOOM = 13.4;
+const USER_FOCUS_ZOOM = 8.5;
 const VIEWPORT_EMIT_DEBOUNCE_MS = 120;
 const HIT_PADDING_PX = 20;
 
@@ -650,6 +650,9 @@ export function ConstellationMap({
             ),
           }
         : null;
+      const animatedClusters = isGlobal
+        ? buildClusteredPoints(animatedSatellites, zoom)
+        : [];
 
       projectedSatellitesRef.current = animatedSatellites;
 
@@ -675,8 +678,8 @@ export function ConstellationMap({
         context.restore();
       }
 
-      if (scene.clusters.length > 0) {
-        for (const cluster of scene.clusters) {
+      if (animatedClusters.length > 0) {
+        for (const cluster of animatedClusters) {
           const clusterGlow = isGlobal ? cluster.radius * 9.2 : cluster.radius * 6.4;
           drawGlow(
             context,
@@ -700,7 +703,7 @@ export function ConstellationMap({
       if (animatedSatellites.length > 0) {
         for (const satellite of animatedSatellites) {
           const emphasized = satellite.id === selectedId || satellite.id === hoveredId;
-          const shouldRenderPoint = true;
+          const shouldRenderPoint = !isGlobal || emphasized;
           const coreRadius = emphasized
             ? satellite.radius + 2 + selectionPulse * 0.7
             : Math.max(0.9, satellite.radius + (isGlobal ? -0.25 : isRegional ? 0.35 : 0));
@@ -889,7 +892,7 @@ export function ConstellationMap({
     pendingLocateRef.current = false;
     map.flyTo({
       center: [userLocation.lng, userLocation.lat],
-      zoom: Math.max(map.getZoom(), USER_FOCUS_ZOOM),
+      zoom: USER_FOCUS_ZOOM,
       essential: true,
       duration: 1200,
     });
@@ -943,7 +946,7 @@ export function ConstellationMap({
             if (userLocation && map) {
               map.flyTo({
                 center: [userLocation.lng, userLocation.lat],
-                zoom: Math.max(map.getZoom(), USER_FOCUS_ZOOM),
+                zoom: USER_FOCUS_ZOOM,
                 essential: true,
                 duration: 1200,
               });

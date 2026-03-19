@@ -18,8 +18,6 @@ export type LocalStarlinkCardProps = {
   satellites: LocalStarlink[];
   selectedSatelliteId?: string | null;
   onSelect?: (satelliteId: string) => void;
-  visibleCount?: number;
-  nearestDistanceKm?: number | null;
   title?: string;
   emptyLabel?: string;
 };
@@ -48,12 +46,26 @@ export function LocalStarlinkCard({
   satellites,
   selectedSatelliteId = null,
   onSelect,
-  visibleCount,
-  nearestDistanceKm,
   title = "Starlinks over you",
   emptyLabel = "No Starlinks above your horizon right now.",
 }: LocalStarlinkCardProps) {
-  const visibleNowCount = satellites.filter((satellite) => satellite.aboveHorizon).length;
+  const visibleNowCount = satellites.length;
+  const highestElevation = satellites.reduce<number | null>((best, satellite) => {
+    const elevation =
+      typeof satellite.elevationDeg === "number" && Number.isFinite(satellite.elevationDeg)
+        ? satellite.elevationDeg
+        : null;
+
+    if (elevation == null) {
+      return best;
+    }
+
+    if (best == null || elevation > best) {
+      return elevation;
+    }
+
+    return best;
+  }, null);
 
   return (
     <section
@@ -75,16 +87,12 @@ export function LocalStarlinkCard({
             </div>
             <p className="satellite-card__eyebrow">{title}</p>
             <h3 className="mt-3 text-[1.45rem] font-semibold tracking-tight text-white sm:text-[1.65rem]">
-              {visibleCount && visibleCount > 0
-                ? `${visibleCount} in view`
-                : satellites.length > 0
-                  ? "Nearest passes"
-                  : "No overhead pass"}
+              {satellites.length > 0 ? `${satellites.length} overhead now` : "No overhead pass"}
             </h3>
             <p className="satellite-card__subtitle mt-2 text-sm">
-              {nearestDistanceKm != null
-                ? `Nearest track is ${formatNumber(nearestDistanceKm)} km from you`
-                : "Select a satellite to open its live detail card"}
+              {satellites.length > 0
+                ? "Satellites currently above your horizon."
+                : "No Starlinks are above your horizon right now."}
             </p>
           </div>
 
@@ -102,7 +110,7 @@ export function LocalStarlinkCard({
           </span>
           <span className="satellite-card__summary-item">
             <Target className="h-3.5 w-3.5" />
-            {nearestDistanceKm != null ? `${formatNumber(nearestDistanceKm)} km nearest` : "Awaiting pass"}
+            {highestElevation != null ? `${formatNumber(highestElevation)} deg highest` : "Awaiting next rise"}
           </span>
         </div>
 
@@ -160,10 +168,10 @@ export function LocalStarlinkCard({
                     <span
                       className={[
                         "satellite-chip",
-                        satellite.aboveHorizon ? "satellite-chip--live" : "",
+                        "satellite-chip--live",
                       ].join(" ")}
                     >
-                      {satellite.aboveHorizon ? "Visible" : "Near"}
+                      Overhead
                     </span>
                     <span className="text-xs uppercase tracking-[0.22em] text-slate-500">
                       NORAD {satellite.id}

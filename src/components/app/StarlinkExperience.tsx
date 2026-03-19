@@ -10,15 +10,15 @@ import { LocalStarlinkCard } from "@/components/home/LocalStarlinkCard";
 import { SelectionCard } from "@/components/home/SelectionCard";
 import { useUserLocation } from "@/hooks/useUserLocation";
 
-const MAP_POLL_INTERVAL_SECONDS = 10;
-const OBSERVER_POLL_INTERVAL_SECONDS = 12;
-const DETAIL_POLL_INTERVAL_SECONDS = 8;
+const MAP_POLL_INTERVAL_SECONDS = 20;
+const OBSERVER_POLL_INTERVAL_SECONDS = 20;
+const DETAIL_POLL_INTERVAL_SECONDS = 20;
 const WORLD_SATELLITE_LIMIT = 720;
 const REGIONAL_SATELLITE_LIMIT = 1200;
 const LOCAL_SATELLITE_LIMIT = 2200;
 const LOCAL_LIST_LIMIT = 8;
 const VIEWPORT_QUERY_MIN_ZOOM = 2.25;
-const LOCAL_PANEL_MIN_ZOOM = 9;
+const LOCAL_PANEL_MIN_ZOOM = 8;
 
 type FeedState = "idle" | "loading" | "ready" | "error";
 type MapMode = "overview" | "regional" | "local";
@@ -623,18 +623,7 @@ export function StarlinkExperience() {
       return rightElevation - leftElevation;
     });
 
-    if (visibleNow.length > 0) {
-      return visibleNow.slice(0, LOCAL_LIST_LIMIT);
-    }
-
-    return observerView.nearest
-      .map(normalizeSatellite)
-      .sort((left, right) => {
-        const leftDistance = typeof left.distanceKm === "number" ? left.distanceKm : Number.POSITIVE_INFINITY;
-        const rightDistance = typeof right.distanceKm === "number" ? right.distanceKm : Number.POSITIVE_INFINITY;
-        return leftDistance - rightDistance;
-      })
-      .slice(0, LOCAL_LIST_LIMIT);
+    return visibleNow.slice(0, LOCAL_LIST_LIMIT);
   }, [observerView]);
 
   return (
@@ -688,8 +677,6 @@ export function StarlinkExperience() {
               satellites={localSatellites}
               selectedSatelliteId={selectedSatelliteId}
               onSelect={handleSelectSatellite}
-              visibleCount={observerView?.summary.visibleCount}
-              nearestDistanceKm={observerView?.summary.nearestRangeKm ?? null}
               title="Local sky"
               emptyLabel={
                 observerView?.nextPasses?.length

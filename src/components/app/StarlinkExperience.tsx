@@ -309,6 +309,7 @@ export function StarlinkExperience() {
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<string | null>(null);
   const [viewport, setViewport] = useState<ConstellationViewport | null>(null);
   const [refreshTick, setRefreshTick] = useState(0);
+  const [localPanelDismissed, setLocalPanelDismissed] = useState(false);
 
   const viewportRef = useRef<ConstellationViewport | null>(viewport);
   const mapRequestSequenceRef = useRef(0);
@@ -660,23 +661,29 @@ export function StarlinkExperience() {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(2,4,10,0.35)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_38%,rgba(2,4,10,0.18)_100%)]" />
 
       {selectedSatellite ? (
-        <div className="pointer-events-none absolute inset-x-4 bottom-4 z-20 flex justify-center sm:inset-x-auto sm:right-4 sm:bottom-4 sm:justify-end">
-          <div className="pointer-events-auto w-full max-w-[28rem]">
+        <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center sm:inset-x-auto sm:right-4 sm:bottom-4 sm:justify-end">
+          <div className="pointer-events-auto w-full max-w-[28rem] sm:max-h-none">
             <SelectionCard satellite={selectedSatellite} onClear={handleClearSelection} />
           </div>
         </div>
       ) : null}
 
-      {localModeActive ? (
-        <div className="pointer-events-none absolute inset-x-4 top-4 z-20 flex justify-center sm:inset-x-auto sm:left-4 sm:top-auto sm:bottom-4 sm:justify-start">
-          <div className="pointer-events-auto w-full max-w-[28rem]">
+      {localModeActive && !localPanelDismissed ? (
+        <div
+          className={[
+            "pointer-events-none absolute inset-x-3 bottom-3 z-20 flex justify-center sm:inset-x-auto sm:left-4 sm:bottom-4 sm:justify-start",
+            selectedSatellite ? "hidden sm:flex" : "",
+          ].join(" ")}
+        >
+          <div className="pointer-events-auto w-full max-w-[28rem] sm:max-h-none">
             <LocalStarlinkCard
               satellites={localSatellites}
               selectedSatelliteId={selectedSatelliteId}
               onSelect={handleSelectSatellite}
+              onDismiss={() => setLocalPanelDismissed(true)}
               title="Local sky"
               emptyLabel={
                 observerView?.nextPasses?.length
@@ -685,6 +692,20 @@ export function StarlinkExperience() {
               }
             />
           </div>
+        </div>
+      ) : null}
+
+      {localModeActive && localPanelDismissed ? (
+        <div className="pointer-events-none absolute left-3 bottom-3 z-20 flex sm:left-4 sm:bottom-4">
+          <button
+            type="button"
+            onClick={() => setLocalPanelDismissed(false)}
+            className="pointer-events-auto map-hud-badge"
+            aria-label="Show local sky panel"
+          >
+            <span className="map-hud-badge__dot" />
+            Local sky
+          </button>
         </div>
       ) : null}
 

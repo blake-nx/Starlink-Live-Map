@@ -732,6 +732,48 @@ select {
   color: rgba(226, 232, 240, 0.82);
 }
 
+@media (max-width: 639px) {
+  .satellite-card {
+    max-height: min(68vh, 34rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .satellite-card__orbital-mark {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .satellite-list {
+    gap: 0.6rem;
+  }
+
+  .satellite-list-item {
+    padding: 0.9rem;
+  }
+
+  .maplibregl-ctrl-top-left {
+    top: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .maplibregl-ctrl-bottom-right {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .maplibregl-ctrl-group button {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .maplibregl-ctrl-attrib {
+    max-width: calc(100vw - 1.5rem);
+    font-size: 10px;
+  }
+}
+
 @keyframes float-slow {
   0%,
   100% {

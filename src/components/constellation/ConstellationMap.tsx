@@ -82,10 +82,10 @@ const MAP_STYLE: StyleSpecification = {
     cartoBase: {
       type: "raster",
       tiles: [
-        "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
-        "https://d.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+        "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://c.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
       ],
       tileSize: 256,
       attribution:
@@ -107,10 +107,11 @@ const MAP_STYLE: StyleSpecification = {
       minzoom: 0,
       maxzoom: 20,
       paint: {
-        "raster-saturation": -0.88,
-        "raster-contrast": 0.34,
-        "raster-brightness-min": 0.07,
-        "raster-brightness-max": 0.5,
+        "raster-saturation": -0.74,
+        "raster-contrast": 0.18,
+        "raster-brightness-min": 0.16,
+        "raster-brightness-max": 0.9,
+        "raster-opacity": 0.78,
         "raster-fade-duration": 0,
       },
     },
@@ -911,7 +912,7 @@ export function ConstellationMap({
     <div
       aria-label="Live Starlink constellation map"
       className={[
-        "relative isolate h-full min-h-[70vh] overflow-hidden rounded-[32px] border border-white/8 bg-slate-950 shadow-[0_24px_120px_rgba(0,0,0,0.55)]",
+        "relative isolate h-full min-h-[70vh] overflow-hidden rounded-[32px] border border-white/8 bg-slate-900 shadow-[0_24px_120px_rgba(0,0,0,0.55)]",
         "backdrop-blur-xl",
         className,
       ].join(" ")}
@@ -971,10 +972,10 @@ export function ConstellationMap({
         className="pointer-events-none absolute inset-0 opacity-100"
         style={{
           background:
-            "linear-gradient(180deg, rgba(2,6,23,0.02), rgba(2,6,23,0.08)), radial-gradient(circle at 50% 45%, rgba(15, 23, 42, 0.08), transparent 34%), radial-gradient(circle at 18% 18%, rgba(56, 189, 248, 0.05), transparent 28%), radial-gradient(circle at 82% 74%, rgba(16, 185, 129, 0.035), transparent 22%)",
+            "linear-gradient(180deg, rgba(2,6,23,0.015), rgba(2,6,23,0.05)), radial-gradient(circle at 50% 45%, rgba(15, 23, 42, 0.04), transparent 34%), radial-gradient(circle at 18% 18%, rgba(56, 189, 248, 0.04), transparent 28%), radial-gradient(circle at 82% 74%, rgba(16, 185, 129, 0.025), transparent 22%)",
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_42%,rgba(2,6,23,0.08)_76%,rgba(2,6,23,0.18)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_48%,rgba(2,6,23,0.05)_80%,rgba(2,6,23,0.12)_100%)]" />
 
       <div className="pointer-events-none absolute left-4 top-4 z-20 hidden sm:block">
         <div

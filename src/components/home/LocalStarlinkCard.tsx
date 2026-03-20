@@ -1,4 +1,4 @@
-import { Orbit, Target, Waves } from "lucide-react";
+import { Orbit, Target, Waves, X } from "lucide-react";
 
 type LocalStarlink = {
   id: string;
@@ -18,6 +18,7 @@ export type LocalStarlinkCardProps = {
   satellites: LocalStarlink[];
   selectedSatelliteId?: string | null;
   onSelect?: (satelliteId: string) => void;
+  onDismiss?: () => void;
   title?: string;
   emptyLabel?: string;
 };
@@ -46,6 +47,7 @@ export function LocalStarlinkCard({
   satellites,
   selectedSatelliteId = null,
   onSelect,
+  onDismiss,
   title = "Starlinks over you",
   emptyLabel = "No Starlinks above your horizon right now.",
 }: LocalStarlinkCardProps) {
@@ -96,8 +98,21 @@ export function LocalStarlinkCard({
             </p>
           </div>
 
-          <div className="satellite-card__orbital-mark shrink-0">
-            <Target className="h-4 w-4 text-emerald-200" />
+          <div className="flex shrink-0 items-start gap-2">
+            {onDismiss ? (
+              <button
+                type="button"
+                onClick={onDismiss}
+                className="satellite-card__close-button"
+                aria-label="Hide local sky panel"
+                title="Hide local sky panel"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            ) : null}
+            <div className="satellite-card__orbital-mark shrink-0">
+              <Target className="h-4 w-4 text-emerald-200" />
+            </div>
           </div>
         </div>
 
